@@ -1,0 +1,75 @@
+#Create databases
+CREATE DATABASE cars;
+use cars;
+CREATE TABLE Brand (
+  BrandID INT NOT NULL AUTO_INCREMENT,
+  BrandName VARCHAR(50) NOT NULL,
+  PRIMARY KEY (BrandID),
+  UNIQUE (BrandName)
+);
+CREATE TABLE Model (
+  ModelID INT NOT NULL AUTO_INCREMENT,
+  ModelName VARCHAR(50) NOT NULL,
+  BrandID INT NOT NULL,
+  PRIMARY KEY (ModelID),
+  UNIQUE (ModelName),
+  FOREIGN KEY (BrandID) REFERENCES Brand(BrandID)
+);
+CREATE TABLE Style (
+  StyleID INT NOT NULL AUTO_INCREMENT,
+  StyleName VARCHAR(50) NOT NULL,
+  Price DECIMAL(9,2),
+  ModelID INT NOT NULL,
+  PRIMARY KEY (StyleID),
+  FOREIGN KEY (ModelID) REFERENCES Model(ModelID)
+);
+CREATE TABLE Part (
+  PartID INT NOT NULL AUTO_INCREMENT,
+  PartName VARCHAR(50) NOT NULL,
+  SupplierName VARCHAR(50),
+  PRIMARY KEY (PartID),
+  UNIQUE (PartName)
+);
+CREATE TABLE Customer (
+  CustomerID INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(50) NOT NULL,
+  Address VARCHAR(100) NOT NULL,
+  Phone VARCHAR(20),
+  Gender CHAR(1),
+  Income DECIMAL(9,2),
+  PRIMARY KEY (CustomerID)
+);
+CREATE TABLE Inventory (
+  SKU INT NOT NULL AUTO_INCREMENT,
+  Quantity INT,
+  StyleID INT NOT NULL,
+  PRIMARY KEY (SKU),
+  FOREIGN KEY (StyleID) REFERENCES Style(StyleID)
+);
+CREATE TABLE Purchase (
+  PurchaseID INT NOT NULL AUTO_INCREMENT,
+  PurchaseDate DATE NOT NULL,
+  Quantity INT,
+  StyleID INT NOT NULL,
+  PartID INT NOT NULL,
+  PRIMARY KEY (PurchaseID),
+  FOREIGN KEY (StyleID) REFERENCES Style(StyleID),
+  FOREIGN KEY (PartID) REFERENCES Part(PartID)
+);
+CREATE TABLE Sale (
+  SaleID INT NOT NULL AUTO_INCREMENT,
+  SaleDate DATE NOT NULL,
+  CustomerID INT NOT NULL,
+  SKU INT NOT NULL,
+  Price DECIMAL(9,2) NOT NULL,
+  PRIMARY KEY (SaleID),
+  FOREIGN KEY (CustomerID) REFERENCES Customer(CustomerID),
+  FOREIGN KEY (SKU) REFERENCES Inventory(SKU)
+);
+
+CREATE TABLE Maintenance (
+  VIN VARCHAR(50) NOT NULL,
+  MaintenanceDate DATE NOT NULL,
+  OperatorRecord VARCHAR(100),
+  PRIMARY KEY (VIN, MaintenanceDate)
+);

@@ -1,0 +1,9 @@
+Missing Data Pattern
+====================
+
+     age sex diabetes milnepan death7day smoking  bmi     
+5280   1   1        1        1         1       1    1    0
+2529   1   1        1        1         1       1    0    1
+226    1   1        1        1         1       0    1    1
+157    1   1        1        1         1       0    0    2
+       0   0        0        0         0     383 2686 3069

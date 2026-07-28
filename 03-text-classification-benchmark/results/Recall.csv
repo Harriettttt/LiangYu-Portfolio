@@ -1,0 +1,10 @@
+﻿Dataset,Algorithm,Recall
+news,CNN,0.9573
+news,XGBoost,0.9259
+news,RF,0.9048
+rumors,CNN,0.9398
+rumors,XGBoost,0.8286
+rumors,RF,0.7186
+spam,CNN,0.8995
+spam,XGBoost,0.9023
+spam,RF,0.8972

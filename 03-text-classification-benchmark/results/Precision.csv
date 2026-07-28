@@ -1,0 +1,10 @@
+﻿Dataset,Algorithm,Precision
+news,CNN,0.9612
+news,XGBoost,0.9282
+news,RF,0.9072
+rumors,CNN,0.9412
+rumors,XGBoost,0.8376
+rumors,RF,0.7395
+spam,CNN,0.9035
+spam,XGBoost,0.9027
+spam,RF,0.899

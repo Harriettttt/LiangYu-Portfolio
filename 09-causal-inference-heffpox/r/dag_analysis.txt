@@ -1,0 +1,11 @@
+DAG-Based Causal Analysis
+=========================
+
+Exposure: milnepan (treatment)
+Outcome: death7day (7-day mortality)
+
+Minimal Sufficient Adjustment Set for Total Effect:
+{ age, bmi, diabetes, sex, smoking }
+
+Note: ICU is on the causal pathway (mediator) and should NOT be adjusted
+to estimate the TOTAL causal effect of milnepan on death7day.

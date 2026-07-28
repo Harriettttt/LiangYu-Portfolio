@@ -1,0 +1,10 @@
+﻿Dataset,Algorithm,F1 Score
+news,CNN,0.9587
+news,XGBoost,0.9266
+news,RF,0.9054
+rumors,CNN,0.9401
+rumors,XGBoost,0.8317
+rumors,RF,0.7262
+spam,CNN,0.8985
+spam,XGBoost,0.9018
+spam,RF,0.8968

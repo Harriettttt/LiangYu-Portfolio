@@ -1,0 +1,30 @@
+# NHS Data Analysis Report
+Generated: 2025-11-14 23:05:33.474362
+
+## Data Overview
+- Total Practices: 15663
+- Total ICBs: 42
+- Total Sub-ICBs: 106
+- Total Records: 67882
+- Total Variables: 83
+
+## COPD Indicators Statistics
+Primary Indicator: copd008_patients_receiving_intervention_percentage
+- Sample Size: 58181
+- Mean: 38%
+- Median: 34.18%
+- Minimum: 0%
+- Maximum: 100%
+
+## Generated Files
+### Data Files
+- linked_practice_level_full.csv: Complete practice-level dataset
+- agg_icb_level.csv: ICB-level aggregated data
+- agg_subicb_level.csv: Sub-ICB-level aggregated data
+
+### Visualization Files
+- icb_comparison.png: ICB-level COPD indicators comparison
+- practice_geographic_distribution.png: Geographic distribution of practices
+- subicb_boxplot.png: Sub-ICB practice distribution analysis
+- top_practices_ranking.png: Top 15 best performing practices
+

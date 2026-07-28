@@ -1,0 +1,264 @@
+# Does Milnepan Reduce 7-Day Mortality in Heffpox Patients? A Causal Analysis
+
+**Statistical Modelling and Inference for Health - project**
+
+---
+
+## 1. Introduction
+
+### 1.1 Background
+Heffpox is a serious disease with high mortality within 7 days of diagnosis. A new treatment, milnepan, has been proposed to reduce this risk. This report examines whether prescribing milnepan **causes** a reduction in 7-day mortality among heffpox patients at Hundred Acre Hospital.
+
+### 1.2 Causal Question
+**Primary estimand**: The Average Treatment Effect (ATE) of milnepan on 7-day mortality (death7day) among heffpox patients.
+
+We aim to estimate the causal odds ratio comparing the odds of 7-day mortality if all patients received milnepan versus if none received milnepan.
+
+---
+
+## 2. Methods
+
+### 2.1 Study Population
+Patients diagnosed with heffpox (heffpox = 1) were included. The final cohort comprised **N = 8,192** patients, of whom **3,948 (48.2%)** received milnepan and **4,244 (51.8%)** did not.
+
+### 2.2 Outcomes
+- **Primary outcome**: 7-day mortality (death7day) - binary indicator used for causal inference
+- **Secondary outcome**: Time to event (TEVENT) - continuous variable used for exploratory survival analysis
+
+### 2.3 Causal Framework
+A Directed Acyclic Graph (DAG) was constructed based on clinical knowledge (Figure 2):
+
+**Confounders** (variables affecting both treatment assignment and outcome):
+- Age, sex, BMI, smoking status, diabetes
+
+**Mediator** (on the causal pathway, not adjusted):
+- ICU admission (occurs after milnepan initiation)
+
+**Effect modifier** (as noted in the brief):
+- Diabetes may interfere with milnepan's action
+
+The **minimal sufficient adjustment set** identified from the DAG was: {age, BMI, diabetes, sex, smoking}.
+
+### 2.4 Missing Data Handling
+Multiple imputation using chained equations (MICE) was performed with:
+- **m = 20** imputed datasets
+- **BMI**: Predictive mean matching (PMM) for continuous variable
+- **Smoking**: Logistic regression for binary variable
+- Results pooled using Rubin's rules
+
+### 2.5 Causal Effect Estimation
+Two complementary approaches were used:
+
+1. **Outcome Regression**: Multivariable logistic regression adjusting for all confounders
+2. **Inverse Probability of Treatment Weighting (IPTW)**: Propensity score-based weighting to balance confounders
+
+Both methods were applied across all 20 imputed datasets with proper variance estimation.
+
+---
+
+## 3. Results
+
+### 3.1 Missing Data
+
+**Table 1: Missing Data Summary**
+
+| Variable | N Missing | % Missing |
+|----------|-----------|-----------|
+| BMI | 2,686 | 32.8% |
+| Smoking | 383 | 4.7% |
+
+All other variables had complete data. The missing data pattern suggested a Missing at Random (MAR) mechanism, justifying the use of multiple imputation.
+
+### 3.2 Baseline Characteristics
+
+**Table 2: Baseline Characteristics by Treatment Group**
+
+| Variable | No Milnepan (n=4,244) | Milnepan (n=3,948) | SMD |
+|----------|----------------------|-------------------|-----|
+| Age, mean (SD) | 48.5 (20.1) | 39.8 (13.5) | **0.511** |
+| BMI, mean (SD) | 27.9 (4.0) | 28.1 (4.0) | 0.041 |
+| Male, n (%) | 2,001 (47.1%) | 1,984 (50.3%) | 0.062 |
+| Current smoker, n (%) | 1,050 (25.9%) | 863 (23.0%) | 0.069 |
+| Diabetes, n (%) | 627 (14.8%) | 225 (5.7%) | **0.303** |
+
+**Key observations**: 
+- Patients receiving milnepan were significantly **younger** (SMD = 0.51 > 0.1)
+- Patients receiving milnepan had **lower diabetes prevalence** (SMD = 0.30 > 0.1)
+- These imbalances indicate confounding by indication that must be addressed
+
+### 3.3 Overall Mortality
+
+The overall 7-day mortality rate was **40.4%** (3,306/8,192 patients).
+
+### 3.4 Exploratory Survival Analysis (TEVENT)
+
+Figure 1 shows Kaplan-Meier survival curves stratified by milnepan treatment.
+
+**Key findings**:
+- **Median survival**: 8.47 days (95% CI: 8.05-8.85) in the no-milnepan group; **not reached** in the milnepan group
+- **Events**: 2,322 deaths in no-milnepan group vs 1,765 in milnepan group
+- **Log-rank test**: p < 2.2×10⁻¹⁶, indicating a statistically significant difference
+- The milnepan group consistently showed higher survival probability throughout follow-up
+
+### 3.5 DAG Analysis
+
+Figure 2 presents the assumed causal structure. The DAG identifies:
+- **Total effect pathway**: milnepan → death7day (direct) + milnepan → ICU → death7day (indirect via mediator)
+- **Adjustment set**: {age, BMI, diabetes, sex, smoking}
+
+ICU was **not** included in adjustment to estimate the **total causal effect**.
+
+### 3.6 Primary Analysis: Causal Effect Estimates
+
+**Table 3: Comparison of Causal Effect Estimates for 7-Day Mortality**
+
+| Method | Odds Ratio | 95% CI | p-value |
+|--------|------------|--------|---------|
+| Outcome Regression | **0.868** | (0.789 - 0.955) | 0.004 |
+| IPTW | **0.861** | (0.785 - 0.944) | 0.002 |
+
+**Interpretation**: 
+- Both methods yield **highly consistent** estimates (OR ≈ 0.86-0.87)
+- Milnepan is associated with approximately **13-14% reduction** in the odds of 7-day mortality
+- The effect is **statistically significant** (p < 0.01 for both methods)
+
+**Other significant predictors from logistic regression**:
+- Age: OR = 1.024 (1.021-1.027), p < 0.001 — each year increase raises odds by 2.4%
+- BMI: OR = 1.068 (1.052-1.083), p < 0.001 — each unit increase raises odds by 6.8%
+- Diabetes: OR = 1.719 (1.480-1.996), p < 0.001 — diabetes increases odds by 72%
+
+Figure 4 displays the forest plot comparing both estimation methods.
+
+### 3.7 Covariate Balance project(IPTW)
+
+Figure 3 shows the Love plot of standardized mean differences before and after IPTW. After propensity score weighting, all covariates achieved adequate balance (SMD < 0.1), supporting the validity of the IPTW estimates.
+
+### 3.8 Sensitivity Analysis: Effect Modification by Diabetes
+
+Given the clinical note that diabetes may interfere with milnepan's mechanism, subgroup analysis was performed:
+
+**Table 4: Subgroup Analysis by Diabetes Status**
+
+| Subgroup | OR | 95% CI | p-value |
+|----------|-----|--------|---------|
+| **No Diabetes** | **0.750** | (0.678 - 0.829) | <0.001 |
+| **Diabetes** | **4.488** | (3.124 - 6.447) | <0.001 |
+
+**Critical finding**: 
+- In patients **without diabetes**, milnepan shows a **protective effect** (25% reduction in odds of death)
+- In patients **with diabetes**, milnepan appears **harmful** (4.5-fold increase in odds of death)
+- This represents **strong effect modification** by diabetes status
+
+---
+
+## 4. Discussion
+
+### 4.1 Summary of Findings
+
+This analysis provides evidence that milnepan has a **heterogeneous effect** on 7-day mortality in heffpox patients:
+
+1. **Overall effect**: Milnepan reduces 7-day mortality (OR = 0.87, p < 0.01)
+2. **Without diabetes**: Strong protective effect (OR = 0.75, p < 0.001)
+3. **With diabetes**: Harmful effect (OR = 4.49, p < 0.001)
+
+### 4.2 Consistency of Causal Methods
+
+The two estimation approaches produced remarkably consistent results:
+- Outcome regression: OR = 0.868
+- IPTW: OR = 0.861
+
+This consistency strengthens confidence in the causal interpretation.
+
+### 4.3 Clinical Implications
+
+**Recommendation for Dr. C. Robin**:
+1. Milnepan appears effective in reducing 7-day mortality for heffpox patients **without diabetes**
+2. Milnepan should be used with **extreme caution** (or avoided) in patients **with diabetes**, as it may increase mortality risk
+3. Diabetes status should be a key consideration in treatment decisions
+
+### 4.4 Assumptions and Limitations
+
+**Causal assumptions**:
+1. **No unmeasured confounding**: We assume all confounders are captured in the DAG
+2. **Positivity**: Both treatment groups exist across covariate strata
+3. **Consistency**: Treatment is well-defined
+4. **MAR assumption**: Missing data depends only on observed variables
+
+**Limitations**:
+- Observational design limits causal certainty compared to randomized trials
+- High BMI missingness (33%) may introduce bias despite imputation
+- The diabetes interaction finding requires validation in independent data
+
+---
+
+## 5. Conclusion
+
+Based on this causal analysis of 8,192 heffpox patients:
+
+1. **Milnepan reduces 7-day mortality overall** (OR = 0.87, 95% CI: 0.79-0.95)
+2. **The effect is strongly modified by diabetes status**:
+   - Beneficial in non-diabetic patients (OR = 0.75)
+   - Potentially harmful in diabetic patients (OR = 4.49)
+3. **Clinical recommendation**: Milnepan should be prescribed to heffpox patients without diabetes. For diabetic patients, alternative treatments should be considered.
+
+---
+
+## References
+
+1. Hernán MA, Robins JM. *Causal Inference: What If*. Chapman & Hall/CRC; 2020.
+2. van Buuren S. *Flexible Imputation of Missing Data*. 2nd ed. CRC Press; 2018.
+3. Austin PC. An Introduction to Propensity Score Methods for Reducing the Effects of Confounding in Observational Studies. *Multivariate Behavioral Research*. 2011;46(3):399-424.
+4. Rubin DB. Multiple Imputation for Nonresponse in Surveys. Wiley; 1987.
+
+---
+
+## Appendix A: Statistical Methods Details
+
+### A.1 Multiple Imputation
+- **Software**: mice package in R
+- **Number of imputations**: m = 20
+- **Methods**: 
+  - BMI (continuous): Predictive mean matching (PMM)
+  - Smoking (binary): Logistic regression
+- **Iterations**: 10 per imputation
+- **Pooling**: Rubin's rules for combining estimates and variances
+
+### A.2 Propensity Score Model
+- **Treatment**: milnepan (binary)
+- **Covariates**: age, sex, BMI, smoking, diabetes
+- **Estimand**: Average Treatment Effect (ATE)
+- **Weight truncation**: 1st and 99th percentiles (double-sided) to reduce extreme weights
+- **Variance estimation**: Survey-weighted regression (svyglm) for robust standard errors
+
+### A.3 Causal Assumptions
+1. **Conditional exchangeability**: No unmeasured confounders given adjustment set
+2. **Positivity**: 0 < P(milnepan=1|X) < 1 for all X
+3. **Consistency**: Observed outcome = potential outcome under received treatment
+4. **No interference**: One patient's treatment does not affect another's outcome
+
+---
+
+## Appendix B: Figures
+
+- **Figure 1**: Kaplan-Meier survival curves by milnepan treatment (figure1_km_curve.png)
+- **Figure 2**: Directed Acyclic Graph (DAG) showing causal structure (figure2_dag.png)
+- **Figure 3**: Love plot of covariate balance before and after IPTW (figure3_iptw_balance.png) — Dashed line indicates SMD = 0.1 threshold
+- **Figure 4**: Forest plot comparing causal effect estimates from two methods (figure4_forest_plot.png)
+
+---
+
+## Appendix C: R Code
+
+The complete R code for this analysis is provided in the accompanying `.R` file.
+
+**Key packages used**:
+- `survival`, `survminer`: Survival analysis and visualization
+- `mice`: Multiple imputation by chained equations
+- `dagitty`, `ggdag`: DAG construction and visualization
+- `WeightIt`, `cobalt`: Propensity score weighting and balance diagnostics
+- `survey`: Weighted regression models
+
+---
+
+*Report prepared for Dr. C. Robin, Medical Director, Hundred Acre Hospital*  
+*Date: February 2026*

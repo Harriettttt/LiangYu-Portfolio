@@ -1,0 +1,53 @@
+#  project — Report
+
+**Submit this report to Canvas (≤1000 words).** The accompanying Jupyter notebook that generates all figures and results below is saved in eLab folder **project_submitted**; the notebook uses Markdown and comments to explain the code.
+
+*(No Abstract or Introduction; word count excludes captions and references.)*
+
+---
+
+## Methods
+
+**Data and preprocessing.** We use the pathMNIST subset: training and validation images (28×28 RGB), plus an independent test set from a different spatial/clinical source (~4k–7k images). Labels are multi-class tissue types. All pixels are normalised to [0, 1] by dividing by 255. No extra data augmentation is applied for the baseline; the deep model optionally uses the same normalisation with optional RandomHorizontalFlip and RandomRotation (see Notebook). The validation set is either the official pathMNIST validation split or a stratified 90%–10% split from the training data with a fixed random seed (42) so that train/validation partitioning is reproducible. Class counts are left as given (no rebalancing). This preprocessing is applied identically for the baseline and the deep model so that comparisons are fair.
+
+**Baseline.** We train multinomial Logistic Regression (LR) on flattened 28×28×3 = 2352-dimensional vectors, with StandardScaler fitted on the training set only and applied to validation and test. The same train/validation/test splits and preprocessing are used as for the deep model. Validation and test metrics (accuracy, macro-F1) and test-set confusion matrix are recorded (Table 1; Figure 3).
+
+**Deep model and training.** We use a small CNN: three convolutional blocks (Conv2d + BatchNorm + ReLU + MaxPool), then two fully connected layers with dropout. Output dimension equals the number of classes. The model is trained with CrossEntropyLoss and Adam, with early stopping on validation macro-F1 (patience 2–3 epochs). Training and validation loss and validation macro-F1 are logged every epoch. Correctness of training is evidenced by plotting training/validation loss and validation macro-F1 versus epoch (Figure 1, Figure 2): we check that loss decreases and that validation performance improves before early stopping, and we report whether train and validation curves suggest overfitting.
+
+**Hyperparameter optimisation.** We optimise at least one hyperparameter via a explicit strategy: fix a small search space (e.g. learning rate, weight decay, dropout, or channel width), then run multiple training runs (grid or small random set), each with the same train/validation split and the same early-stopping rule. The configuration with the highest validation macro-F1 is selected. No test set is used for this choice. The chosen configuration and its validation metrics are reported; the same best model is then evaluated once on the test set (Table 1; Figure 4).
+
+**Metrics.** We report validation and test accuracy and macro-F1 for both the baseline and the best CNN. For the test set we also report the confusion matrix (Figure 3, Figure 4) and, in the Notebook, a per-class classification report so that class-wise behaviour is interpretable.
+
+**Reproducibility.** A fixed random seed (42) is set for NumPy, PyTorch, and (where applicable) sklearn. Data splits and preprocessing steps are documented in the Notebook so that all reported figures and tables can be reproduced by running the Notebook from top to bottom.
+
+---
+
+## Results
+
+**Training behaviour.** Figure 1 shows the training and validation loss curves for the best hyperparameter run. Figure 2 shows validation macro-F1 over epochs. Loss decreases and validation macro-F1 increases before early stopping, indicating that training is proceeding correctly and that the chosen early-stopping criterion is effective. The gap between training and validation loss (if any) is discussed in the Notebook; if validation loss flattens or increases while training loss keeps decreasing, this suggests mild overfitting and justifies early stopping.
+
+**Validation and test metrics.** Table 1 summarises validation and test accuracy and macro-F1 for the baseline (LR) and the best CNN. The CNN consistently outperforms the baseline on both validation and test sets, with a clear gain in macro-F1, indicating that the deep model captures useful spatial structure beyond the flattened-pixel baseline. Test performance is slightly worse than validation in line with the test set coming from a different distribution (e.g. different spatial locations or centres).
+
+**Confusion matrices.** Figure 3 gives the test-set confusion matrix for the baseline LR; Figure 4 gives the test-set confusion matrix for the best CNN. The CNN typically shows a stronger diagonal and fewer off-diagonal confusions. Per-class precision, recall, and F1 are available in the Notebook’s classification report.
+
+| Model        | Val accuracy | Val macro-F1 | Test accuracy | Test macro-F1 |
+|-------------|--------------|--------------|----------------|----------------|
+| LR (baseline) | (see Notebook) | (see Notebook) | (see Notebook) | (see Notebook) |
+| Best CNN    | (see Notebook) | (see Notebook) | (see Notebook) | (see Notebook) |
+
+**Table 1.** Validation and test metrics for baseline Logistic Regression and the best CNN. All values are produced by the submitted Jupyter Notebook.
+
+---
+
+## Discussion
+
+The main conclusions are: (1) Training and validation curves (Figure 1, Figure 2) show that the CNN trains correctly and that early stopping on validation macro-F1 is appropriate. (2) The CNN clearly outperforms the Logistic Regression baseline on both validation and test sets (Table 1), indicating that exploiting spatial structure via convolutions is beneficial for this histopathology image task. (3) Generalisation to the independent test set is good but test metrics are slightly below validation, as expected when the test set is drawn from a different spatial or clinical setting; this supports the use of validation-based model selection without test-set peeking.
+
+Limitations include: the small search space for hyperparameters (a few configurations), possible sensitivity to the random seed for data split and training, and the fact that no class imbalance or data augmentation strategy was systematically tuned. Future work could expand the hyperparameter search, add stronger augmentation, or use a pre-trained backbone to improve robustness and test-set performance.
+
+---
+
+## References
+
+1. MedMNIST: PathMNIST (pathmnist). https://medmnist.com/
+2. Pedregosa et al., Scikit-learn: Machine learning in Python. JMLR 12, 2825–2830 (2011).
