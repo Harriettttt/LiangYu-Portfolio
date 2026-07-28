@@ -1,0 +1,66 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.venv/
+venv/
+.env
+.ipynb_checkpoints/
+
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+~$*
+
+# Model weights & experiment logs
+*.pt
+*.pth
+*.ckpt
+*.onnx
+models/
+checkpoints/
+runs/
+wandb/
+tensorboard/
+
+# Datasets (keep folder placeholders)
+**/data/*
+!**/data/.gitkeep
+# allow small bundled analysis csv already committed under project trees
+!09-causal-inference-heffpox/data/heffpox_2526.csv
+!10-ra-pain-longitudinal-modeling/data/PD_dat.csv
+*.mat
+*.pgm
+*.npz
+*.h5
+*.hdf5
+CamVid/
+**/CamVid/
+**/shapefiles/
+**/*_full.csv
+**/*_full_fixed.csv
+
+# Large / local artifacts
+*.zip
+*.7z
+*.mp4
+*.pkl
+*.RData
+*.Rhistory
+
+# Secrets / coursework leftovers
+*password*
+*账号*
+*.pem
+secrets.*
+专业课作业/
+曼大*/
+作业们/

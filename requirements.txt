@@ -1,0 +1,30 @@
+# Core scientific stack
+numpy>=1.23
+scipy>=1.10
+pandas>=1.5
+matplotlib>=3.7
+seaborn>=0.12
+scikit-learn>=1.2
+xgboost>=1.7
+nltk>=3.8
+tqdm>=4.65
+opencv-python>=4.8
+statsmodels>=0.14
+lifelines>=0.27
+
+# Deep learning (install the CUDA build that matches your machine if needed)
+torch>=2.0
+torchvision>=0.15
+
+# Medical / multimodal extras (optional depending on project)
+medmnist>=2.2
+scanpy>=1.9
+
+# Reinforcement learning
+gymnasium[atari,accept-rom-license]>=0.29
+ale-py>=0.8
+stable-baselines3>=2.0
+
+# Notebooks
+jupyter>=1.0
+ipykernel>=6.0
